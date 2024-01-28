@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 void remover();
 int repeater(int sudoku[9][9], int replica[2][9][9], int o);
 int zero(int array[9]);
