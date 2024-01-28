@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 void remover();
-int repeater(int sudoku[9][9], int replica[2][9][9], int o);
-int zero(int array[9]);
+int repeater();
+void zero();
 int checker();
 int rowchecker();
 int columnchecker();
@@ -16,23 +16,24 @@ int main()
         {
             printf("Enter the value.\n");
             scanf("%d", &sudoku[0][R][C]);
-            if (sudoku[0][R][C] != 0)
+            if (sudoku[0][R][C] == 0)
             {
-                for (int i = ; i <= 10; i++)
+                for (int i = 1; i < 10; i++)
                 {
                     sudoku[i][R][C] = i;
                 }
-                else
+            }
+            else
+            {
+                for (int i = 1; i < 10; i++)
                 {
-                    for (int i = ; i <= 9; i++)
-                    {
-                        sudoku[i][R][C] = 0;
-                    }
+                    sudoku[i][R][C] = 0;
                 }
             }
         }
     }
-    while (repeater(sudoku, replica, o) == 1)
+
+    while (repeater(replica, o) == 1)
     {
         for (R = 0; R < 9; R++)
         {
@@ -85,26 +86,23 @@ int main()
 
                     for (int k = 0; k < 9; k++)
                     {
-                        if ((C != k) && (sudoku[R][k] != 0))
+                        if ((C != k) && (sudoku[0][R][k] != 0))
                         {
-                            remover(sudoku[R][k], array);
+                            remover(sudoku[0][R][k], sudoku[10][9][9], R, C);
                         }
                     }
 
-                    if (zero(array))
-                    {
-                        sudoku[R][C] = zero(array);
-                    }
+                    zero(sudoku, R, C);
 
                     for (int h = 0; h < 9; h++)
                     {
-                        if ((R != h) && (sudoku[h][C] != 0))
+                        if ((R != h) && (sudoku[0][h][C] != 0))
                         {
-                            remover(sudoku[h][C], array);
+                            remover(sudoku[0][h][C], sudoku[10][9][9], R, C);
                         }
                     }
 
-                    zero(sudoku)
+                    zero(sudoku, R, C);
                 }
             }
         }
@@ -112,7 +110,7 @@ int main()
         {
             for (int j = 0; j < 9; j++)
             {
-                replica[o % 2][i][j] = sudoku[i][j];
+                replica[o % 2][i][j] = sudoku[0][i][j];
             }
         }
         o++;
@@ -121,18 +119,18 @@ int main()
     {
         for (int j = 0; j < 9; j++)
         {
-            printf("%d ", sudoku[i][j]);
+            printf("%d ", sudoku[0][i][j]);
         }
         printf("\n");
     }
 }
-void remover(int x, int ptr, int R, int C)
+void remover(int x, int sudoku[10][9][9], int R, int C)
 {
     for (int i = 1; i <= 9; i++)
     {
-        if (*(*(*(ptr + i) + R) + C) == x)
+        if (*(*(*(sudoku + i) + R) + C) == x)
         {
-            *(*(*(ptr + i) + R) + C) = 0;
+            *(*(*(sudoku + i) + R) + C) = 0;
         }
     }
 }
@@ -152,7 +150,7 @@ void zero(int sudoku[10][9][9], int R, int C)
         *(*(*sudoku + R) + C) = x;
     }
 }
-int repeater(int sudoku[10][9][9], int replica[2][9][9], int o)
+int repeater(int replica[2][9][9], int o)
 {
     if (o > 2)
     {
