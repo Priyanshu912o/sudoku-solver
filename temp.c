@@ -64,7 +64,7 @@ int main()
                                 break;
                             }
                         }
-                        if (j < 9)
+                        if (j < 3)
                         {
                             break;
                         }
@@ -116,8 +116,9 @@ int main()
 
 // Functions
 
-void input_sudoku(int sudoku[10][9][9], int R, int C) {
-    
+void input_sudoku(int sudoku[10][9][9], int R, int C)
+{
+
     // This function inputs sudoku from text file. An example problem is given in input.txt
 
     FILE *fptr = fopen("input.txt", "r");
@@ -152,15 +153,6 @@ void input_sudoku(int sudoku[10][9][9], int R, int C) {
             }
         }
     }
-
-    for (int i = 0; i < 9; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            printf("%d ", sudoku[0][i][j]);
-        }
-        printf("\n");
-    }
 }
 
 void remover(int x, int sudoku[10][9][9], int R, int C)
@@ -191,7 +183,7 @@ void zero(int sudoku[10][9][9], int R, int C)
 }
 int repeater(int replica[2][9][9], int o)
 {
-    if (o > 2)
+    if (o > 100)
     {
         int i;
         for (i = 0; i < 9; i++)
