@@ -1,37 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void input_sudoku();
 void remover();
 int repeater();
 void zero();
 int checker();
 int rowchecker();
 int columnchecker();
+
 int main()
 {
     int o = 1, R, C, sudoku[10][9][9], replica[2][9][9];
-    for (R = 0; R < 9; R++)
-    {
-        for (C = 0; C < 9; C++)
-        {
-            printf("Enter the value.\n");
-            scanf("%d", &sudoku[0][R][C]);
-            if (sudoku[0][R][C] == 0)
-            {
-                for (int i = 1; i < 10; i++)
-                {
-                    sudoku[i][R][C] = i;
-                }
-            }
-            else
-            {
-                for (int i = 1; i < 10; i++)
-                {
-                    sudoku[i][R][C] = 0;
-                }
-            }
-        }
-    }
+
+    // Input of array
+
+    input_sudoku(sudoku, R, C);
+
+    // Checking begins
 
     while (repeater(replica, o) == 1)
     {
@@ -88,7 +74,7 @@ int main()
                     {
                         if ((C != k) && (sudoku[0][R][k] != 0))
                         {
-                            remover(sudoku[0][R][k], sudoku[10][9][9], R, C);
+                            remover(sudoku[0][R][k], sudoku, R, C); // fixed this (was entering sudoku[10][9][9] as second argument)
                         }
                     }
 
@@ -98,7 +84,7 @@ int main()
                     {
                         if ((R != h) && (sudoku[0][h][C] != 0))
                         {
-                            remover(sudoku[0][h][C], sudoku[10][9][9], R, C);
+                            remover(sudoku[0][h][C], sudoku, R, C); // same error fixed as 10 lines above
                         }
                     }
 
@@ -115,6 +101,9 @@ int main()
         }
         o++;
     }
+
+    // Display answer
+
     for (int i = 0; i < 9; i++)
     {
         for (int j = 0; j < 9; j++)
@@ -124,6 +113,56 @@ int main()
         printf("\n");
     }
 }
+
+// Functions
+
+void input_sudoku(int sudoku[10][9][9], int R, int C) {
+    
+    // This function inputs sudoku from text file. An example problem is given in input.txt
+
+    FILE *fptr = fopen("input.txt", "r");
+
+    if (fptr == NULL)
+    {
+        printf("Error While opening file");
+        exit(1);
+    }
+
+    int thisChar;
+
+    for (R = 0; R < 9; R++)
+    {
+        for (C = 0; C < 9; C++)
+        {
+            thisChar = fgetc(fptr);
+            sudoku[0][R][C] = thisChar - '0'; // this converts char number to int number
+            if (sudoku[0][R][C] == 0)
+            {
+                for (int i = 1; i < 10; i++)
+                {
+                    sudoku[i][R][C] = i;
+                }
+            }
+            else
+            {
+                for (int i = 1; i < 10; i++)
+                {
+                    sudoku[i][R][C] = 0;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            printf("%d ", sudoku[0][i][j]);
+        }
+        printf("\n");
+    }
+}
+
 void remover(int x, int sudoku[10][9][9], int R, int C)
 {
     for (int i = 1; i <= 9; i++)
