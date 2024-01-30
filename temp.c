@@ -6,8 +6,8 @@ void remover();
 int repeater();
 void zero();
 int checker();
-int rowchecker();
-int columnchecker();
+void rowchecker();
+void columnchecker();
 
 int main()
 {
@@ -28,6 +28,9 @@ int main()
                 if (sudoku[0][R][C] == 0)
                 {
                     int a = 0, b = 0, c = 2, d = 2, e = 3, f = 3, grid = 0, j;
+
+                    // from here two nested loops create upper & lower bound conditions for 9 sudoku grids to check positioning of the element.
+
                     for (int i = 0; i < 3; i++)
                     {
                         if ((a <= 6) && (i != 0))
@@ -66,7 +69,7 @@ int main()
                         }
                         if (j < 3)
                         {
-                            break;
+                            break; // here the outer loop is exited iff the inner loop breaks in between which will happen when the right grid is found using the checker function.
                         }
                     }
 
@@ -76,6 +79,7 @@ int main()
                         {
                             remover(sudoku[0][R][k], sudoku, R, C); // fixed this (was entering sudoku[10][9][9] as second argument)
                         }
+                        columnchecker(sudoku, R, C);
                     }
 
                     zero(sudoku, R, C);
@@ -86,6 +90,7 @@ int main()
                         {
                             remover(sudoku[0][h][C], sudoku, R, C); // same error fixed as 10 lines above
                         }
+                        rowchecker(sudoku, R, C);
                     }
 
                     zero(sudoku, R, C);
@@ -96,7 +101,7 @@ int main()
         {
             for (int j = 0; j < 9; j++)
             {
-                replica[o % 2][i][j] = sudoku[0][i][j];
+                replica[o % 2][i][j] = sudoku[0][i][j]; // here the latest face of sudoku gets stored in an another array for further coparison(for while loop condition).
             }
         }
         o++;
@@ -183,7 +188,7 @@ void zero(int sudoku[10][9][9], int R, int C)
 }
 int repeater(int replica[2][9][9], int o)
 {
-    if (o > 100)
+    if (o > 100000)
     {
         int i;
         for (i = 0; i < 9; i++)
@@ -214,7 +219,103 @@ int checker(int a, int b, int c, int d, int e, int f, int R, int C, int sudoku[1
                 }
             }
         }
-        zero(sudoku, R, C);
-        return 1;
+
+        for (int i = 1; i < 10; i++)
+        {
+
+            if (sudoku[i][R][C] != 0)
+            {
+                int x = sudoku[i][R][C];
+                for (int k = a; k < e; k++)
+                {
+                    for (int h = b; h < f; h++)
+                    {
+                        if ((sudoku[0][k][h] == 0) && ((k != R) || (h != C)))
+                        {
+                            for (int j = 1; j < 10; j++)
+                            {
+                                if (x == sudoku[j][k][h])
+                                {
+                                    goto afterForLoop;
+                                }
+                            }
+                        }
+                    }
+                }
+                sudoku[0][R][C] = sudoku[i][R][C];
+            }
+
+        afterForLoop:
+            zero(sudoku, R, C);
+            return 1;
+        }
+    }
+}
+void columnchecker(int sudoku[10][9][9], int R, int C)
+{
+    for (int i = 1; i < 10; i++)
+    {
+        if (sudoku[i][R][C] != 0)
+        {
+            int x = sudoku[i][R][C];
+            for (int h = 0; h < 9; h++)
+            {
+                if ((sudoku[0][R][h] == 0) && (C != h))
+                {
+                    for (int j = 1; j < 10; j++)
+                    {
+                        if (x == sudoku[j][R][h])
+                        {
+                            goto afterForLoop2;
+                        }
+                    }
+                }
+            }
+            sudoku[0][R][C] = sudoku[i][R][C];
+            int count = 0;
+            count++;
+        afterForLoop2:
+            if (count == 1)
+            {
+                for (int num = 1; num < 10; num++)
+                {
+                    sudoku[num][R][C] = 0;
+                }
+            }
+        }
+    }
+}
+void rowchecker(int sudoku[10][9][9], int R, int C)
+{
+    for (int i = 1; i < 10; i++)
+    {
+        if (sudoku[i][R][C] != 0)
+        {
+            int x = sudoku[i][R][C];
+            for (int k = 0; k < 9; k++)
+            {
+                if ((sudoku[0][k][C] == 0) && (R != k))
+                {
+                    for (int j = 1; j < 10; j++)
+                    {
+                        if (x == sudoku[j][k][C])
+                        {
+                            goto afterForLoop3;
+                        }
+                    }
+                }
+            }
+            sudoku[0][R][C] = sudoku[i][R][C];
+            int count = 0;
+            count++;
+        afterForLoop3:
+            if (count == 1)
+            {
+                for (int num = 1; num < 10; num++)
+                {
+                    sudoku[num][R][C] = 0;
+                }
+            }
+        }
     }
 }
