@@ -79,7 +79,7 @@ int main()
                         {
                             remover(sudoku[0][R][k], sudoku, R, C); // fixed this (was entering sudoku[10][9][9] as second argument)
                         }
-                        columnchecker(sudoku, R, C);
+                        // columnchecker(sudoku, R, C);
                     }
 
                     zero(sudoku, R, C);
@@ -90,7 +90,7 @@ int main()
                         {
                             remover(sudoku[0][h][C], sudoku, R, C); // same error fixed as 10 lines above
                         }
-                        rowchecker(sudoku, R, C);
+                        // rowchecker(sudoku, R, C);
                     }
 
                     zero(sudoku, R, C);
@@ -219,13 +219,12 @@ int checker(int a, int b, int c, int d, int e, int f, int R, int C, int sudoku[1
                 }
             }
         }
-
+        zero(sudoku, R, C);
         for (int i = 1; i < 10; i++)
         {
 
             if (sudoku[i][R][C] != 0)
             {
-                int x = sudoku[i][R][C];
                 for (int k = a; k < e; k++)
                 {
                     for (int h = b; h < f; h++)
@@ -234,7 +233,7 @@ int checker(int a, int b, int c, int d, int e, int f, int R, int C, int sudoku[1
                         {
                             for (int j = 1; j < 10; j++)
                             {
-                                if (x == sudoku[j][k][h])
+                                if (sudoku[j][k][h] == i)
                                 {
                                     goto afterForLoop;
                                 }
@@ -242,13 +241,19 @@ int checker(int a, int b, int c, int d, int e, int f, int R, int C, int sudoku[1
                         }
                     }
                 }
-                sudoku[0][R][C] = sudoku[i][R][C];
+                *(*(*sudoku + R) + C) = i;
             }
 
         afterForLoop:
-            zero(sudoku, R, C);
-            return 1;
+            if (sudoku[0][R][C] != 0)
+            {
+                for (int t = 1; (t < 10) && (t != i); t++)
+                {
+                    sudoku[t][R][C] = 0;
+                }
+            }
         }
+        return 1;
     }
 }
 void columnchecker(int sudoku[10][9][9], int R, int C)
@@ -257,21 +262,20 @@ void columnchecker(int sudoku[10][9][9], int R, int C)
     {
         if (sudoku[i][R][C] != 0)
         {
-            int x = sudoku[i][R][C];
             for (int h = 0; h < 9; h++)
             {
                 if ((sudoku[0][R][h] == 0) && (C != h))
                 {
                     for (int j = 1; j < 10; j++)
                     {
-                        if (x == sudoku[j][R][h])
+                        if (sudoku[j][R][h] == i)
                         {
                             goto afterForLoop2;
                         }
                     }
                 }
             }
-            sudoku[0][R][C] = sudoku[i][R][C];
+            *(*(*sudoku + R) + C) = i;
             int count = 0;
             count++;
         afterForLoop2:
@@ -291,21 +295,20 @@ void rowchecker(int sudoku[10][9][9], int R, int C)
     {
         if (sudoku[i][R][C] != 0)
         {
-            int x = sudoku[i][R][C];
             for (int k = 0; k < 9; k++)
             {
                 if ((sudoku[0][k][C] == 0) && (R != k))
                 {
                     for (int j = 1; j < 10; j++)
                     {
-                        if (x == sudoku[j][k][C])
+                        if (sudoku[j][k][C] == i)
                         {
                             goto afterForLoop3;
                         }
                     }
                 }
             }
-            sudoku[0][R][C] = sudoku[i][R][C];
+            *(*(*sudoku + R) + C) = i;
             int count = 0;
             count++;
         afterForLoop3:
