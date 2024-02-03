@@ -10,9 +10,9 @@ void layer_checker();
 
 int main()
 {
-    int sudoku[10][9][9], R, C, o = 0;
+    int sudoku[10][9][9], R, C, number_of_repetation = 0;
     input_sudoku(sudoku);
-    while (repeater(sudoku, o))
+    while (repeater(sudoku, number_of_repetation))
     {
         for (int R = 0; R < 9; R++)
         {
@@ -28,7 +28,7 @@ int main()
         filler(sudoku);
         layer_checker(sudoku);
 
-        o++;
+        number_of_repetation++;
     }
     for (int i = 0; i < 9; i++)
     {
@@ -109,27 +109,28 @@ void filler(int sudoku[10][9][9])
             int number_of_possibilities = 0;
             if (sudoku[0][ROW][COLUMN] == 0)
             {
-                for (int possibilties = 1; (possibilties < 10) && (sudoku[possibilties][ROW][COLUMN] != 0); possibilties++)
+                for (int possibilties = 1; possibilties < 10; possibilties++)
                 {
-                    possibilty = possibilties;
-                    number_of_possibilities++;
+                    if (sudoku[possibilties][ROW][COLUMN] != 0)
+                    {
+                        possibilty = possibilties;
+                        number_of_possibilities++;
+                    }
                 }
                 if (number_of_possibilities == 1)
                 {
                     *(*(*sudoku + ROW) + COLUMN) = possibilty;
-                    for (int grid = 1; grid < 10; grid++)
-                    {
-                        *(*(*(sudoku + grid) + ROW) + COLUMN) = 0;
-                    }
+                    *(*(*(sudoku + possibilty) + ROW) + COLUMN) = 0;
                 }
             }
         }
     }
 }
 
-bool repeater(int sudoku[10][9][9], int turn)
+bool repeater(int sudoku[10][9][9], int number_of_repetation)
 {
     static int comparing_array[2][9][9];
+    int turn = (number_of_repetation % 2);
     for (int ROW = 0; ROW < 9; ROW++)
     {
         for (int COLUMN = 0; COLUMN < 9; COLUMN++)
@@ -138,7 +139,7 @@ bool repeater(int sudoku[10][9][9], int turn)
         }
     }
 
-    if (turn > 2)
+    if (number_of_repetation > 2)
     {
         for (int ROW = 0; ROW < 9; ROW++)
         {
@@ -168,20 +169,21 @@ void layer_checker(int sudoku[10][9][9])
     {
         for (int ROW = 0; ROW < 9; ROW++)
         {
-            int possibility;
             int number_of_possibilities = 0;
             int possible_row = 0;
             int possible_column = 0;
-            for (int COLUMN = 0; (COLUMN < 9) && (sudoku[grid][ROW][COLUMN] == grid); COLUMN++)
+            for (int COLUMN = 0; COLUMN < 9; COLUMN++)
             {
-                possible_row = ROW;
-                possible_column = COLUMN;
-                possibility = grid;
-                number_of_possibilities++;
+                if (sudoku[grid][ROW][COLUMN] == grid)
+                {
+                    possible_row = ROW;
+                    possible_column = COLUMN;
+                    number_of_possibilities++;
+                }
             }
             if (number_of_possibilities == 1)
             {
-                *(*(*(sudoku + grid) + possible_row) + possible_column) = possibility;
+                *(*(*(sudoku + grid) + possible_row) + possible_column) = grid;
                 for (int layer = 1; layer < 10; layer++)
                 {
                     *(*(*(sudoku + layer) + possible_row) + possible_column) = 0;
@@ -191,18 +193,21 @@ void layer_checker(int sudoku[10][9][9])
 
         for (int COLUMN = 0; COLUMN < 9; COLUMN++)
         {
-            int possibility;
             int number_of_possibilities = 0;
             int possible_row = 0;
             int possible_column = 0;
-            for (int ROW = 0; (ROW < 9) && (sudoku[grid][ROW][COLUMN] == grid); ROW++)
+            for (int ROW = 0; ROW < 9; ROW++)
             {
-                possibility = grid;
-                number_of_possibilities++;
+                if (sudoku[grid][ROW][COLUMN] == grid)
+                {
+                    possible_row = ROW;
+                    possible_column = COLUMN;
+                    number_of_possibilities++;
+                }
             }
             if (number_of_possibilities == 1)
             {
-                *(*(*(sudoku + grid) + possible_row) + possible_column) = possibility;
+                *(*(*(sudoku + grid) + possible_row) + possible_column)=grid;
                 for (int layer = 1; layer < 10; layer++)
                 {
                     *(*(*(sudoku + layer) + possible_row) + possible_column) = 0;
