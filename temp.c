@@ -10,17 +10,17 @@ void layer_checker();
 
 int main()
 {
-    int sudoku[10][9][9], R, C, number_of_repetation = 0;
+    int sudoku[10][9][9], number_of_repetation = 0;
     input_sudoku(sudoku);
     while (repeater(sudoku, number_of_repetation))
     {
-        for (int R = 0; R < 9; R++)
+        for (int ROW = 0; ROW < 9; ROW++)
         {
-            for (int C = 0; C < 9; C++)
+            for (int COLUMN = 0; COLUMN < 9; COLUMN++)
             {
-                if (sudoku[0][R][C] != 0)
+                if (sudoku[0][ROW][COLUMN] != 0)
                 {
-                    row_column_grid_remover(sudoku[0][R][C], sudoku, R, C);
+                    row_column_grid_remover(sudoku[0][ROW][COLUMN], sudoku, ROW, COLUMN);
                 }
             }
         }
@@ -207,7 +207,7 @@ void layer_checker(int sudoku[10][9][9])
             }
             if (number_of_possibilities == 1)
             {
-                sudoku[0][possible_row][possible_column]=grid;
+                sudoku[0][possible_row][possible_column] = grid;
                 for (int layer = 1; layer < 10; layer++)
                 {
                     sudoku[layer][possible_row][possible_column] = 0;
@@ -216,3 +216,19 @@ void layer_checker(int sudoku[10][9][9])
         }
     }
 }
+
+/*
+This code is an implementation of a Sudoku solver in C. Let's go through the main functions:
+
+1. input_sudoku(): This function reads the initial Sudoku puzzle from a text file named "input.txt" and initializes the sudoku array. It reads characters from the file, converts them to integers, and populates the sudoku array accordingly.
+
+2. row_column_grid_remover(): This function is responsible for removing possibilities (numbers) from rows, columns, and grids based on the filled numbers in the Sudoku grid.
+
+3. filler(): This function fills in cells with only one possibility, i.e., if there's only one possible number left for a cell, it fills that number in the Sudoku grid.
+
+4. repeater(): This function checks whether the Sudoku grid has been modified in the current iteration. If there's no change, it returns false, indicating that the solver has converged and no further iterations are necessary.
+
+5. layer_checker(): This function checks each layer (possibility) of the Sudoku grid and fills in cells where there's only one possibility left.
+
+6. In the main() function, it repeatedly applies these functions until no further modifications can be made (repeater() returns false), indicating that the Sudoku puzzle has been solved or cannot be solved further.
+*/
