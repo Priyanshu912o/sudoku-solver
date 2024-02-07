@@ -84,8 +84,8 @@ void row_column_grid_remover(int garbage, int sudoku[10][9][9], int ROW, int COL
 {
     for (int i = 0; i < 9; i++)
     {
-        *(*(*(sudoku + garbage) + ROW) + i) = 0;
-        *(*(*(sudoku + garbage) + i) + COLUMN) = 0;
+        sudoku[garbage][ROW][i] = 0;
+        sudoku[garbage][i][COLUMN] = 0;
     }
 
     int grid_row_lowerbound = ((int)(ROW / 3) * 3);
@@ -94,7 +94,7 @@ void row_column_grid_remover(int garbage, int sudoku[10][9][9], int ROW, int COL
     {
         for (int j = grid_column_lowerbound; j < (grid_column_lowerbound + 3); j++)
         {
-            *(*(*(sudoku + garbage) + i) + j) = 0;
+            sudoku[garbage][i][j] = 0;
         }
     }
 }
@@ -119,8 +119,8 @@ void filler(int sudoku[10][9][9])
                 }
                 if (number_of_possibilities == 1)
                 {
-                    *(*(*sudoku + ROW) + COLUMN) = possibilty;
-                    *(*(*(sudoku + possibilty) + ROW) + COLUMN) = 0;
+                    sudoku[0][ROW][COLUMN] = possibilty;
+                    sudoku[possibilty][ROW][COLUMN] = 0;
                 }
             }
         }
@@ -183,10 +183,10 @@ void layer_checker(int sudoku[10][9][9])
             }
             if (number_of_possibilities == 1)
             {
-                *(*(*(sudoku + grid) + possible_row) + possible_column) = grid;
+                sudoku[0][possible_row][possible_column] = grid;
                 for (int layer = 1; layer < 10; layer++)
                 {
-                    *(*(*(sudoku + layer) + possible_row) + possible_column) = 0;
+                    sudoku[layer][possible_row][possible_column] = 0;
                 }
             }
         }
@@ -207,10 +207,10 @@ void layer_checker(int sudoku[10][9][9])
             }
             if (number_of_possibilities == 1)
             {
-                *(*(*(sudoku + grid) + possible_row) + possible_column)=grid;
+                sudoku[0][possible_row][possible_column]=grid;
                 for (int layer = 1; layer < 10; layer++)
                 {
-                    *(*(*(sudoku + layer) + possible_row) + possible_column) = 0;
+                    sudoku[layer][possible_row][possible_column] = 0;
                 }
             }
         }
